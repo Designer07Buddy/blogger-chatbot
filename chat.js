@@ -1,10 +1,6 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-exports.handler = async function(event, context) {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
-  }
-
+export async function handler(event) {
   const { message } = JSON.parse(event.body);
 
   try {
@@ -22,8 +18,14 @@ exports.handler = async function(event, context) {
     });
 
     const data = await res.json();
-    return { statusCode: 200, body: JSON.stringify({ reply: data.choices[0].message.content }) };
-  } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ reply: "Error" }) };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ reply: data.choices[0].message.content })
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ reply: "Sorry, something went wrong." })
+    };
   }
-};
+}
